@@ -1,0 +1,323 @@
+{
+ "categories": [
+  {
+   "id": "spanners",
+   "name": "Spanners & Wrenches",
+   "description": "Combination, open-end, ring and slogging spanners, adjustable and pipe wrenches.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Match the spanner to the fastener size marked on the nut or bolt head. Use ring or combination spanners for high torque, open-end spanners where access is from the side, and slogging spanners only for striking. Chrome vanadium spanners with a chrome finish resist corrosion in humid coastal plants.",
+   "care": "Keep spanners clean and dry, never extend them with a pipe for extra leverage, and replace any spanner with a spread or cracked jaw.",
+   "applications": [
+    "Machine maintenance and breakdown repair",
+    "Vehicle and fleet maintenance",
+    "Structural and fabrication assembly",
+    "Panel, motor and pump installation"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "pliers",
+   "name": "Pliers & Cutters",
+   "description": "Combination, long nose, side cutting, circlip, locking and water pump pliers, crimpers and strippers.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Choose combination pliers for general work, long nose for tight spaces, side cutters for flush cutting and circlip pliers for retaining rings. For electrical work, use pliers with proper insulated sleeves and never on live circuits unless they are VDE-rated.",
+   "care": "Oil the joint occasionally, do not use pliers as a hammer, and do not cut hardened wire with pliers not rated for it.",
+   "applications": [
+    "Electrical and panel wiring",
+    "Assembly and fitting work",
+    "Maintenance tool kits",
+    "Gripping, bending and cutting wire"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "screwdrivers",
+   "name": "Screwdrivers & Bits",
+   "description": "Screwdriver sets, precision drivers, bit sets and line testers.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Fit matters more than anything: the tip should fill the screw slot or recess completely. Phillips and Pozidriv are not interchangeable. Sets give the best coverage; single drivers replace your most-used sizes.",
+   "care": "Do not use screwdrivers as pry bars or chisels, and replace drivers with worn or rounded tips to avoid damaging screws.",
+   "applications": [
+    "Electrical panels and switchgear",
+    "Assembly lines",
+    "Instruments and electronics",
+    "General maintenance"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "sockets",
+   "name": "Sockets, Ratchets & Torque",
+   "description": "Socket sets in 1/4\", 3/8\" and 1/2\" drive, ratchets and torque wrenches.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Pick the drive size by fastener size: 1/4\" for small fasteners, 3/8\" for general work, 1/2\" for heavier bolts and 3/4\" or 1\" for trucks and machinery. Use six-point sockets for high torque and impact-rated sockets only with impact wrenches. Use a torque wrench wherever a tightening value is specified.",
+   "care": "Store torque wrenches at their lowest setting and have them calibrated periodically.",
+   "applications": [
+    "Automotive and fleet maintenance",
+    "Machine assembly",
+    "Torque-controlled fastening",
+    "Workshop tool boards"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "hexkeys",
+   "name": "Allen / Hex Keys",
+   "description": "L-keys, ball-point, folding and ring hex key sets.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Check whether your fasteners are metric or inch before buying. Ball-point keys allow angled entry; long-arm keys add reach and leverage.",
+   "care": "Use the correct size fully inserted to avoid rounding the socket head.",
+   "applications": [
+    "Machine tools and fixtures",
+    "Die and mould maintenance",
+    "Furniture and racking assembly",
+    "Automation equipment"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "hammers",
+   "name": "Hammers & Striking",
+   "description": "Ball pein, claw, soft-face and rubber mallets.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Ball pein hammers suit metalwork, claw hammers suit nailing, and soft-face or rubber mallets protect finished surfaces. Choose weight by task: lighter for precision, heavier for driving.",
+   "care": "Check that the head is tight on the handle before use and replace damaged handles.",
+   "applications": [
+    "Fitting and assembly",
+    "Riveting and punching",
+    "Alignment of machined parts",
+    "Carpentry and packing"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "measuring",
+   "name": "Measuring & Levels",
+   "description": "Measuring tapes, spirit levels and chalk lines.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Short steel tapes suit shop-floor use, long tapes suit site layout. For levels, longer beams give more accurate readings over a distance; magnetic levels hold onto steel structures.",
+   "care": "Keep levels in their case and check accuracy by reversing the level on a flat surface.",
+   "applications": [
+    "Machine installation and alignment",
+    "Site layout",
+    "Fabrication marking",
+    "Quality checks"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "cutting",
+   "name": "Knives, Saws & Snips",
+   "description": "Utility knives, blades, bolt cutters, aviation snips and hacksaw frames.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Snap-off knives suit packaging and light cutting, utility knives suit heavier materials, and snips or bolt cutters handle metal. Match bolt cutter length to the thickness of material to be cut.",
+   "care": "Always retract or cover blades after use and dispose of used blades safely.",
+   "applications": [
+    "Packaging and stores",
+    "Sheet metal and ducting",
+    "Cable and wire work",
+    "Maintenance and site work"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "storage",
+   "name": "Tool Kits & Storage",
+   "description": "Ready tool kits, tool boxes, bags and trolleys.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Ready kits are the fastest way to equip a new technician. Cantilever boxes display everything at once, plastic boxes are light to carry, and roller cabinets suit a fixed workshop bay.",
+   "care": "Label drawers and use foam or trays so missing tools are noticed.",
+   "applications": [
+    "Maintenance departments",
+    "Service vans and field teams",
+    "New technician kits",
+    "Workshop organisation"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "workshop",
+   "name": "Workshop & Lifting",
+   "description": "Clamps, bench vices, jacks, grease guns and hand trucks.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Choose jacks with capacity above the load you lift, and always use stands under raised loads. Pick hand truck capacity to suit your heaviest regular load.",
+   "care": "Never work under a load supported only by a jack.",
+   "applications": [
+    "Material handling in stores",
+    "Vehicle and machine lifting",
+    "Fabrication and assembly",
+    "Lubrication rounds"
+   ],
+   "faqs": []
+  },
+  {
+   "id": "pneumatics",
+   "name": "Pneumatic Components",
+   "description": "Solenoid valves, FRL units, cylinders, push-in fittings, PU tubing and couplers.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Size fittings and tubing to the port thread (1/8\", 1/4\", 3/8\", 1/2\") and tube OD (4 to 16 mm). For valves, choose 5/2 for double acting cylinders and 3/2 for single acting, and confirm the coil voltage. For cylinders, choose bore by force (force ≈ pressure × piston area) and stroke by travel.",
+   "care": "Install an FRL ahead of valves and cylinders; dry, clean air is the biggest factor in pneumatic component life.",
+   "applications": [
+    "Special purpose machines",
+    "Packaging and filling lines",
+    "Automation fixtures and jigs",
+    "Compressed air distribution"
+   ],
+   "faqs": [
+    [
+     "Are Techno push-in fittings compatible with other brands of PU tube?",
+     "Yes. Push-in fittings are sized by tube outer diameter (4, 6, 8, 10, 12 mm and so on), so any good-quality PU or nylon tube of the same OD will fit."
+    ]
+   ]
+  },
+  {
+   "id": "airtools",
+   "name": "Air Tools",
+   "description": "Air impact wrenches, die grinders, angle grinders, spray guns and blow guns.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Check the tool's air consumption (SCFM) against your compressor output and use a hose of adequate size. Choose impact wrench drive and torque by the largest fastener you handle.",
+   "care": "Oil air tools daily (unless lubricated by an FRL), drain the compressor tank, and wear eye and hearing protection.",
+   "applications": [
+    "Automotive and tyre service",
+    "Assembly lines",
+    "Fabrication and finishing",
+    "Painting and cleaning"
+   ],
+   "faqs": [
+    [
+     "What compressor do I need for an air impact wrench?",
+     "Most 1/2\" impact wrenches need about 4 to 8 SCFM at 6.3 bar. Check the tool's rating and allow extra capacity if several tools run at once."
+    ]
+   ]
+  },
+  {
+   "id": "brass",
+   "name": "Brass Fittings",
+   "description": "Brass hose nipples, elbows, tees, unions, PU connectors and valves.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Identify thread size and gender (male/female) on both components. Hose nipples are sized by thread × hose bore. Use PTFE tape or thread sealant on tapered threads.",
+   "care": "Do not over-tighten brass fittings; brass is softer than steel and threads can strip.",
+   "applications": [
+    "Compressor and air receiver plumbing",
+    "Gas and fuel lines",
+    "Water and oil lines",
+    "Instrument and gauge connections"
+   ],
+   "faqs": [
+    [
+     "Are these BSP threads?",
+     "Yes, the fittings are made with BSP threads in inch sizes. Confirm parallel (BSPP) or tapered (BSPT) with our team for critical applications."
+    ]
+   ]
+  },
+  {
+   "id": "taps",
+   "name": "Taps & Drills",
+   "description": "HSS hand taps, TiN-coated taps, pipe taps and HSS jobber drills.",
+   "guide_title": "How to choose",
+   "how_to_choose": "Match the tap to the thread standard (metric coarse, BSW, BSP, NPT) and drill the correct tap drill size first. Use hand taps in sequence for blind holes and spiral point taps for through holes on machines. TiN-coated taps last longer on steel.",
+   "care": "Always use cutting oil and back the tap off regularly to break chips when hand tapping.",
+   "applications": [
+    "Machine shops and tool rooms",
+    "Maintenance repairs",
+    "Production tapping",
+    "Pipe and fitting threading"
+   ],
+   "faqs": [
+    [
+     "What is the tap drill size for M8 × 1.25?",
+     "6.8 mm. As a rule for metric coarse threads, tap drill ≈ nominal diameter minus pitch."
+    ]
+   ]
+  }
+ ],
+ "brands": [
+  {
+   "name": "Stanley",
+   "tagline": "Hand tools & storage",
+   "headline": "Stanley hand tools, storage and material handling",
+   "intro": "Stanley has made hand tools since 1843 and is one of the most recognised tool brands in the world. MRO Mogul supplies Stanley spanners, pliers, screwdrivers, socket sets, hammers, measuring tools, knives, toolboxes and hand trucks for plants and workshops across South India."
+  },
+  {
+   "name": "Taparia",
+   "tagline": "Hand tools & kits",
+   "headline": "Taparia hand tools, India's trusted tool brand",
+   "intro": "Taparia Tools has manufactured hand tools in Nashik since 1965 and is the most familiar tool brand in Indian maintenance departments. We supply Taparia pliers, spanners, screwdrivers, socket sets, torque wrenches, hammers, tool kits, jacks and drills."
+  },
+  {
+   "name": "Techno",
+   "tagline": "Pneumatics & air tools",
+   "headline": "Techno pneumatic components and air tools",
+   "intro": "Techno supplies pneumatic automation components and air tools to Indian industry: solenoid valves, FRL units, cylinders, push-in fittings, PU tubing, quick couplers, impact wrenches and grinders. MRO Mogul stocks the most-used Techno items for machine builders and maintenance teams."
+  },
+  {
+   "name": "Airic",
+   "tagline": "Brass fittings",
+   "headline": "Airic brass pneumatic and hose fittings",
+   "intro": "Airic International manufactures forged brass fittings for compressed air, gas, water and oil lines: hose nipples, elbows, tees, unions, PU connectors, valves and safety valves."
+  },
+  {
+   "name": "Totem",
+   "tagline": "HSS taps",
+   "headline": "Totem HSS taps by Forbes Precision Tools",
+   "intro": "Totem taps are made by Forbes Precision Tools and Machine Parts Ltd, one of India's established cutting tool makers. We supply Totem HSS hand taps, spiral point machine taps, TiN-coated taps and pipe taps."
+  },
+  {
+   "name": "Black+Decker",
+   "tagline": "Tool kits",
+   "headline": "Black+Decker hand tool kits",
+   "intro": "Black+Decker hand tool kits combine everyday tools in a single carry case, a convenient choice for new technicians and service teams."
+  }
+ ],
+ "home_popular": [
+  "techno-4v-solenoid-valve",
+  "techno-male-connector",
+  "techno-pu-tube",
+  "techno-frl-unit",
+  "stanley-combination-spanner-set",
+  "taparia-combination-plier",
+  "stanley-24pc-1-2-socket-set",
+  "taparia-torque-wrench",
+  "techno-air-impact-wrench-1-2",
+  "airic-brass-hose-nipple-male"
+ ],
+ "home_showcase": [
+  [
+   "techno-frl-unit",
+   "Air preparation",
+   "pneumatics"
+  ],
+  [
+   "stanley-24pc-1-2-socket-set",
+   "Socket sets",
+   "sockets"
+  ],
+  [
+   "techno-4v-solenoid-valve",
+   "Solenoid valves",
+   "pneumatics"
+  ],
+  [
+   "airic-brass-mini-ball-valve",
+   "Brass fittings",
+   "brass"
+  ],
+  [
+   "techno-air-impact-wrench-1-2",
+   "Air tools",
+   "airtools"
+  ],
+  [
+   "taparia-combination-plier",
+   "Pliers",
+   "pliers"
+  ]
+ ],
+ "company": {
+  "gstin": "",
+  "phone": "+91 98840 64464",
+  "phone_raw": "919884064464",
+  "email": "sales@accelfast.in",
+  "domain": "https://mromogul.com"
+ }
+}

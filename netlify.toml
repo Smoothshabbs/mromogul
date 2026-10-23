@@ -1,0 +1,12 @@
+[build]
+  command = "python3 site/build.py"
+  publish = "public"
+
+[build.environment]
+  NODE_VERSION = "22"
+  PYTHON_VERSION = "3.12"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = ["data/products.csv"]
