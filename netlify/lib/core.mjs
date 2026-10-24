@@ -155,6 +155,7 @@ export async function sendMail({ to, name, subject, html, bccSales = false }) {
   const body = { from: { address: process.env.MAIL_FROM, name: process.env.MAIL_FROM_NAME || "MRO Mogul" },
     to: [{ email_address: { address: to, name: name || to } }], subject, htmlbody: html,
     ...(process.env.MAIL_BOUNCE ? { bounce_address: process.env.MAIL_BOUNCE } : {}),
+    ...((process.env.MAIL_REPLY_TO || process.env.MAIL_SALES) ? { reply_to: [{ address: process.env.MAIL_REPLY_TO || process.env.MAIL_SALES, name: "MRO Mogul Sales" }] } : {}),
     ...(bccSales && process.env.MAIL_SALES ? { bcc: [{ email_address: { address: process.env.MAIL_SALES, name: "MRO Mogul Sales" } }] } : {}) };
   const r = await fetch(process.env.ZEPTO_API || "https://api.zeptomail.in/v1.1/email", { method: "POST",
     headers: { Authorization: "Zoho-enczapikey " + token, "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body) });
