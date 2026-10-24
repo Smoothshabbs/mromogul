@@ -15,7 +15,8 @@ export default async (req) => {
     return new Response(buf, { headers: { "Content-Type": "application/pdf", "Content-Disposition": `attachment; filename="MROMogul-Statement-${from}-to-${to}.pdf"`, "Cache-Control": "no-store" } });
   } catch (e) {
     console.error(e);
-    if (process.env.MAIL_SALES) await sendMail({ to: process.env.MAIL_SALES, subject: `Statement request: ${u.company || u.name}`,
+    const to = process.env.MAIL_ACCOUNTS || process.env.MAIL_SALES;
+    if (to) await sendMail({ to, subject: `Statement request: ${u.company || u.name}`,
       html: mailLayout("Customer requested a statement", `<p>${esc(u.company || u.name)} (${esc(u.email)}) asked for a statement from ${from} to ${to}, but it could not be generated automatically. Please email it from Zoho Books.</p>`) }).catch(() => {});
     return json(502, { message: "We couldn't generate the statement automatically. Our accounts team has been notified and will email it to you." });
   }
