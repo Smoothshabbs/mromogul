@@ -20,7 +20,10 @@ export default async (req) => {
   if (org) { try { const x = await (await fetch(`${API}/books/v3/settings/taxes?organization_id=${org}`, { headers: H })).json(); res.books_taxes = (x.taxes || []).map(v => ({ tax_id: v.tax_id, name: v.tax_name, percent: v.tax_percentage, type: v.tax_specific_type || v.tax_type })); } catch (e) { res.tax_error = String(e); } }
   for (const m of ["Accounts", "Contacts"]) {
     try { const f = await (await fetch(`${API}/crm/${process.env.ZOHO_CRM_VERSION || "v8"}/settings/fields?module=${m}`, { headers: H })).json();
-      res[`crm_${m}_custom_fields`] = (f.fields || []).filter(x => x.custom_field).map(x => ({ label: x.field_label, api_name: x.api_name, type: x.data_type })); } catch (e) { res[`crm_${m}_error`] = String(e); }
+      if (!f.fields) res[`crm_${m}_error`] = f;
+      res[`crm_${m}_custom_fields`] = (f.fields || []).filter(x => x.custom_field).map(x => ({ label: x.field_label, api_name: x.api_name, type: x.data_type, options: (x.pick_list_values || []).map(v => v.display_value) }));
+      res[`crm_${m}_gst_or_type_fields`] = (f.fields || []).filter(x => /gst|type/i.test(x.field_label + " " + x.api_name)).map(x => ({ label: x.field_label, api_name: x.api_name, type: x.data_type, custom: !!x.custom_field }));
+      res[`crm_${m}_field_count`] = (f.fields || []).length; } catch (e) { res[`crm_${m}_error`] = String(e); }
   }
   res.expected = { gstin_field: process.env.CRM_FIELD_GSTIN || "GSTIN", customer_type_field: process.env.CRM_FIELD_CUSTOMER_TYPE || "Customer_Type",
     hint: "Create these custom fields in Zoho CRM (Accounts: GSTIN, Customer Type; Contacts: Customer Type) or set CRM_FIELD_* to the API names listed above. Use the 18% GST group id for ZOHO_TAX_ID_INTRA and IGST 18% for ZOHO_TAX_ID_INTER." };
