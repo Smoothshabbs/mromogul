@@ -87,9 +87,10 @@ Commit the changes. Netlify then builds the full product page with specs, FAQs a
 | `ZOHO_TAX_ID_INTRA` | Tax ID of the **GST 18%** group (CGST+SGST), for Tamil Nadu customers. |
 | `ZOHO_TAX_ID_INTER` | Tax ID of **IGST 18%**, for customers outside Tamil Nadu. |
 | `ZEPTO_TOKEN` | The ZeptoMail "Send Mail token" (section 6). |
-| `MAIL_FROM` | The sender address, for example `orders@mromogul.com`. |
-| `MAIL_SALES` | Where copies of orders and acceptances go, for example `sales@accelfast.in`. |
-| Optional | `MAIL_FROM_NAME` (default "MRO Mogul"), `QUOTE_VALID_DAYS` (default 15), `ORDER_ON_ACCEPT` (`no` = accepting a quote does not create a sales order), `CRM_FIELD_GSTIN`, `CRM_FIELD_CUSTOMER_TYPE`, `CRM_LEAD_SOURCE`, `QUOTE_TERMS`, `ORDER_TERMS` |
+| `MAIL_FROM` | `orders@mromogul.com`, the sender address customers see. |
+| `MAIL_SALES` | `sales@mromogul.com`. Gets a copy of every order and accepted quote. When customers reply to an email, the reply goes here too. |
+| `MAIL_ACCOUNTS` | `accounts@mromogul.com`. Gets statement requests that couldn't be generated automatically. |
+| Optional | `MAIL_FROM_NAME` (default "MRO Mogul"), `MAIL_REPLY_TO` (replies go to `MAIL_SALES` unless you set this), `QUOTE_VALID_DAYS` (default 15), `ORDER_ON_ACCEPT` (`no` = accepting a quote does not create a sales order), `CRM_FIELD_GSTIN`, `CRM_FIELD_CUSTOMER_TYPE`, `CRM_LEAD_SOURCE`, `QUOTE_TERMS`, `ORDER_TERMS` |
 
 ## 5. Connect Zoho (one time)
 1. **Zoho CRM:**
@@ -114,8 +115,8 @@ Commit the changes. Netlify then builds the full product page with specs, FAQs a
 ## 6. Emails (Zoho ZeptoMail)
 Order confirmations, password resets and reorder reminders are sent through **Zoho ZeptoMail**. It's Zoho's transactional email service; the India data centre is zeptomail.in and it is pay-as-you-go.
 1. Sign up at https://www.zoho.in/zeptomail/ and add the domain `mromogul.com`.
-2. Add the DNS records it shows (SPF/DKIM) in **GoDaddy → DNS**, then wait for them to verify.
-3. Create a Mail Agent. Under **SMTP & API → API**, copy the **Send Mail token** into `ZEPTO_TOKEN`, and set `MAIL_FROM`.
+2. Add the DNS records it shows in **GoDaddy → DNS**, then wait for them to verify. If it asks for an SPF value and you already have an SPF record (from your mailbox provider), add it to that record. Never create a second SPF record.
+3. Create a Mail Agent. Under **SMTP & API → API**, copy the **Send Mail token** into `ZEPTO_TOKEN`. Set `MAIL_FROM` to `orders@mromogul.com`, `MAIL_SALES` to `sales@mromogul.com` and `MAIL_ACCOUNTS` to `accounts@mromogul.com`.
 
 Until this is set up, the site works fully but sends no emails. The reminder setting is saved and starts working once email is on.
 
