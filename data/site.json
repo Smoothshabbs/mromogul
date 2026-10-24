@@ -314,10 +314,12 @@
   ]
  ],
  "company": {
-  "gstin": "",
+  "gstin": "33ADDPT2076M2Z8",
   "phone": "+91 98840 64464",
   "phone_raw": "919884064464",
-  "email": "sales@accelfast.in",
-  "domain": "https://mromogul.com"
+  "email": "sales@mromogul.com",
+  "domain": "https://mromogul.com",
+  "support_email": "support@mromogul.com",
+  "accounts_email": "accounts@mromogul.com"
  }
 }
