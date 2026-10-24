@@ -116,19 +116,30 @@ export const crm = (p, o) => zcall(`${APID()}/crm/${process.env.ZOHO_CRM_VERSION
 export const STATE_CODES = { "Andhra Pradesh": "AP", "Karnataka": "KA", "Kerala": "KL", "Tamil Nadu": "TN", "Telangana": "TS", "Puducherry": "PY", "Maharashtra": "MH", "Goa": "GA", "Gujarat": "GJ", "Delhi": "DL", "Odisha": "OD", "West Bengal": "WB" };
 
 /* Create / update the customer's profile in Zoho CRM (Account + Contact). */
+const FIELDS = {};
+async function crmFields(m) {   // which fields exist in this CRM module (cached), so we never send a field Zoho doesn't have
+  if (FIELDS[m]) return FIELDS[m];
+  try { const f = await crm(`/settings/fields?module=${m}`); FIELDS[m] = new Set((f.fields || []).map(x => x.api_name)); } catch { FIELDS[m] = null; }
+  return FIELDS[m];
+}
+const onlyKnown = (obj, known, keep) => known ? Object.fromEntries(Object.entries(obj).filter(([k]) => keep.includes(k) || known.has(k))) : obj;
 export async function syncCRM(u) {
   const F_GST = process.env.CRM_FIELD_GSTIN || "GSTIN";
   const F_TYPE = process.env.CRM_FIELD_CUSTOMER_TYPE || "Customer_Type";
   const accountName = u.company || u.name;
-  const acc = { Account_Name: accountName, Phone: u.phone, Billing_Street: u.address, Billing_City: u.city, Billing_State: u.state, Billing_Code: u.pincode, Billing_Country: "India",
-    [F_TYPE]: u.customer_type, ...(u.gstin ? { [F_GST]: u.gstin } : {}), Description: "Registered on mromogul.com" };
+  const accKnown = await crmFields("Accounts"), conKnown = await crmFields("Contacts");
+  // On Accounts, use a custom "Customer Type" field if there is one, otherwise the standard Account Type field (relabelled in your CRM).
+  const F_ACC_TYPE = process.env.CRM_FIELD_ACCOUNT_TYPE || (!accKnown || accKnown.has(F_TYPE) ? F_TYPE : accKnown.has("Account_Type") ? "Account_Type" : F_TYPE);
+  const acc = onlyKnown({ Account_Name: accountName, Phone: u.phone, Billing_Street: u.address, Billing_City: u.city, Billing_State: u.state, Billing_Code: u.pincode, Billing_Country: "India",
+    [F_ACC_TYPE]: u.customer_type, ...(u.gstin ? { [F_GST]: u.gstin } : {}),
+    Description: `Registered on mromogul.com. Customer type: ${u.customer_type}.${u.gstin ? " GSTIN: " + u.gstin + "." : ""}` }, accKnown, ["Account_Name"]);
   const a = await crm("/Accounts/upsert", { method: "POST", body: JSON.stringify({ data: [acc], duplicate_check_fields: ["Account_Name"] }) });
   const ar = a.data && a.data[0]; if (!ar || ar.status !== "success") throw new Error("CRM account: " + JSON.stringify(ar || a).slice(0, 300));
   const [first, ...rest] = String(u.name).trim().split(/\s+/);
   const con = { First_Name: rest.length ? first : "", Last_Name: rest.length ? rest.join(" ") : first, Email: u.email, Mobile: u.phone,
     Account_Name: { id: ar.details.id }, Mailing_Street: u.address, Mailing_City: u.city, Mailing_State: u.state, Mailing_Zip: u.pincode, Mailing_Country: "India",
     [F_TYPE]: u.customer_type, ...(process.env.CRM_LEAD_SOURCE ? { Lead_Source: process.env.CRM_LEAD_SOURCE } : {}) };
-  const c = await crm("/Contacts/upsert", { method: "POST", body: JSON.stringify({ data: [con], duplicate_check_fields: ["Email"] }) });
+  const c = await crm("/Contacts/upsert", { method: "POST", body: JSON.stringify({ data: [onlyKnown(con, conKnown, ["Last_Name", "Email", "Account_Name"])], duplicate_check_fields: ["Email"] }) });
   const cr = c.data && c.data[0]; if (!cr || cr.status !== "success") throw new Error("CRM contact: " + JSON.stringify(cr || c).slice(0, 300));
   u.crm_account_id = ar.details.id; u.crm_contact_id = cr.details.id; delete u.crm_error;
   return u;
