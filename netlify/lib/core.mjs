@@ -180,7 +180,7 @@ export function mailLayout(title, inner) {
   return `<!doctype html><html><body style="margin:0;background:#F3F4F6;font-family:Arial,Helvetica,sans-serif;color:#121B25">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F3F4F6;padding:24px 12px"><tr><td align="center">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:10px;overflow:hidden">
-<tr><td style="background:#121B25;padding:18px 24px;color:#fff;font-size:20px;font-weight:bold">MRO<span style="color:#F2B329">MOGUL</span></td></tr>
+<tr><td style="background:#121B25;padding:16px 24px"><img src="${SITE()}/img/logo-white-email.png" alt="MRO Mogul" width="200" style="display:block;height:auto;border:0;color:#F2B329;font-size:20px;font-weight:bold"></td></tr>
 <tr><td style="padding:26px 24px 8px"><h1 style="font-size:20px;margin:0 0 14px">${H(title)}</h1>${inner}</td></tr>
 <tr><td style="padding:18px 24px 24px;font-size:12px;color:#56616D;border-top:1px solid #E2E6EA">MRO Mogul, a unit of Accelfast Industrial Enterprises · 165 Broadway, Chennai 600108 · +91 98840 64464</td></tr>
 </table></td></tr></table></body></html>`;
