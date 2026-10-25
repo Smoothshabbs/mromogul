@@ -1039,3 +1039,10 @@ h2{font-size:clamp(1.5rem,2.4vw,2.05rem)}
  .dtable td:first-child{grid-column:1/-1}
  .dtable .r{text-align:left}
 }
+/* ===== logo ===== */
+.brand{display:flex!important;align-items:center;flex:none;line-height:0}
+.brand img{height:56px;width:auto;display:block}
+.foot .brand img{height:56px}
+@media (max-width:900px){.brand img{height:42px}}
+@media (max-width:560px){.brand img{height:34px}}
+@media (max-width:380px){.brand img{height:30px}}
