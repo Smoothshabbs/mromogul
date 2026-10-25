@@ -62,6 +62,42 @@ PROD=lambda pid: f"/product/{pid}/"; CAT=lambda cid: f"/category/{cid}/"; BR=lam
 for f in F:
     for r in f['vrows']: r.setdefault('std_pack','1'); r['std_pack']=r.get('std_pack') or '1'
 
+
+# ---------- blog posts (content/blog/*.md) ----------
+try:
+    import markdown as _md
+    def md2html(t): return _md.markdown(t, extensions=['tables','sane_lists','attr_list'])
+except Exception:
+    warn('python "markdown" package missing; blog posts shown as plain paragraphs')
+    def md2html(t): return ''.join(f'<p>{E(p)}</p>' for p in t.split('\n\n') if p.strip())
+POSTS=[]
+BLOGDIR=os.path.join(ROOT,'content/blog')
+for fn in sorted(os.listdir(BLOGDIR)) if os.path.isdir(BLOGDIR) else []:
+    if not fn.endswith('.md'): continue
+    raw=open(os.path.join(BLOGDIR,fn),encoding='utf-8-sig').read().replace('\r\n','\n')
+    meta={}; body=raw
+    m=re.match(r'^---\n(.*?)\n---\n(.*)$',raw,re.S)
+    if m:
+        body=m.group(2)
+        for line in m.group(1).split('\n'):
+            if ':' in line: k,v=line.split(':',1); meta[k.strip().lower()]=v.strip().strip('"')
+    if meta.get('draft','').lower() in ('yes','true'): continue
+    title=meta.get('title') or fn[:-3]
+    date=meta.get('date') or fn[:10]
+    try: datetime.date.fromisoformat(date)
+    except Exception: warn(f'blog {fn}: date "{date}" should look like 2026-10-25'); date=TODAY
+    if date>TODAY: continue   # scheduled: appears automatically on or after its date (on the next deploy)
+    sl=meta.get('slug') or slug(re.sub(r'^\d{4}-\d{2}-\d{2}-','',fn[:-3]))
+    prods=[p.strip() for p in meta.get('products','').split(',') if p.strip()]
+    for p in prods:
+        if p not in {f['id'] for f in F}: warn(f'blog {fn}: product "{p}" not found')
+    words=len(re.sub(r'<[^>]+>',' ',body).split())
+    POSTS.append({'title':title,'date':date,'type':(meta.get('type') or 'Update').title(),'desc':meta.get('description') or re.sub(r'[#*_>\[\]()]','',body.strip().split('\n\n')[0])[:160],
+      'slug':sl,'products':[p for p in prods if p in {f['id'] for f in F}],'image':meta.get('image',''),'author':meta.get('author') or 'MRO Mogul Team',
+      'html':md2html(body),'mins':max(1,round(words/200)),'url':f'/blog/{sl}/'})
+POSTS.sort(key=lambda p:p['date'],reverse=True)
+BLOGIMG=os.path.join(ROOT,'images/blog')
+
 if os.path.exists(OUT): shutil.rmtree(OUT)
 for d in ('/img/p','/assets'): os.makedirs(OUT+d,exist_ok=True)
 
@@ -131,6 +167,7 @@ def header(active):
     nav=(f'<a href="/"{" aria-current=\"page\"" if active=="/" else ""}>Home</a>'
          f'<a href="/products/"{" aria-current=\"page\"" if active=="/products/" else ""}>All Products</a>'
          +dd('Shop by Brand','/brands/',brands,active=='/brands/')+dd('Categories','/categories/',cats,active=='/categories/')+
+         f'<a href="/blog/"{" aria-current=\"page\"" if active=="/blog/" else ""}>Blog &amp; Updates</a>'+
          f'<a href="/about/"{" aria-current=\"page\"" if active=="/about/" else ""}>About Us</a><a href="/contact/"{" aria-current=\"page\"" if active=="/contact/" else ""}>Contact</a>')
     return f'''{TOPBAR}<header class="site-head"><div class="wrap head-in">{brandmark()}
     <form class="hsearch" action="/products/" data-to="/products/" role="search">{ico("search")}<input name="q" type="search" placeholder="Search products, brands or part numbers" aria-label="Search products"><button type="submit">Search</button></form>
@@ -146,7 +183,7 @@ FOOT=f'''<section class="assure"><div class="wrap">
 <footer class="foot"><div class="wrap"><div class="foot-grid">
   <div style="display:grid;gap:14px;align-content:start">{brandmark(True)}<p>Industrial MRO and automation products for plants, workshops and OEMs across South India.</p><p class="parent">MRO Mogul is a unit of <a href="https://accelfast.in" style="color:#fff">Accelfast Industrial Enterprises</a>, 165 Broadway, Chennai – 600 108. Supplying industry since 2009.{(' GSTIN '+CONFIG['gstin']+'.') if CONFIG['gstin'] else ''}</p></div>
   <div><h4>Shop</h4><ul><li><a href="/products/">All products</a></li><li><a href="/brands/">Shop by brand</a></li>{''.join(f'<li><a href="{CAT(c)}">{E(n)}</a></li>' for c,n,_ in CATS[10:14])}<li><a href="/categories/">All categories</a></li></ul></div>
-  <div><h4>Customers</h4><ul><li><a href="/account/">Sign in / create account</a></li><li><a href="/cart/">Cart &amp; quotation</a></li><li><a href="/contact/">Bulk &amp; project quotes</a></li><li><a href="/policies/">Shipping, returns &amp; privacy</a></li><li><a href="/about/#faq">FAQs</a></li></ul></div>
+  <div><h4>Customers</h4><ul><li><a href="/account/">Sign in / create account</a></li><li><a href="/cart/">Cart &amp; quotation</a></li><li><a href="/contact/">Bulk &amp; project quotes</a></li><li><a href="/policies/">Shipping, returns &amp; privacy</a></li><li><a href="/about/#faq">FAQs</a></li><li><a href="/blog/">Blog &amp; updates</a></li></ul></div>
   <div><h4>Contact</h4><ul><li>165 Broadway, Chennai – 600 108</li><li><a href="tel:+{CONFIG['phone_raw']}">{CONFIG['phone']}</a></li><li><a href="mailto:{CONFIG['email']}">{CONFIG['email']}</a></li><li><a href="https://wa.me/{CONFIG['phone_raw']}" target="_blank" rel="noopener">WhatsApp us</a></li></ul></div>
 </div><div class="foot-bottom"><span>© 2026 MRO Mogul · A unit of Accelfast Industrial Enterprises</span><span>Brand names and trademarks belong to their respective owners.</span></div></div></footer>
 <a class="wa-float" href="https://wa.me/{CONFIG['phone_raw']}" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">{ico("wa")}<span>Chat with us</span></a>'''
@@ -230,6 +267,12 @@ WHO=f'''<div class="who"><div class="who-l"><span class="eyebrow">Who you are bu
 {f'<div><dt>GSTIN</dt><dd>{CONFIG["gstin"]}</dd></div>' if CONFIG['gstin'] else ''}<div><dt>Phone / WhatsApp</dt><dd><a href="tel:+{CONFIG['phone_raw']}">{CONFIG['phone']}</a></dd></div><div><dt>Email</dt><dd><a href="mailto:{CONFIG['email']}">{CONFIG['email']}</a></dd></div><div><dt>Serving</dt><dd>Tamil Nadu · Karnataka · Andhra Pradesh · Kerala</dd></div></dl></div>'''
 
 # ---------- home ----------
+MON_=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+def _teaser(p):
+    img=f"/img/p/{p['products'][0]}.jpg" if p['products'] and not p['image'] else (f"/img/blog/{p['slug']}.jpg" if p['image'] else '/img/logo-512.png')
+    return f'<a class="post-card" href="{p["url"]}"><span class="pc-img{"" if p["image"] else " prod"}"><img src="{img}" alt="" loading="lazy"></span><span class="pc-meta"><b>{E({"Guide":"Buying guide","Update":"Company update","News":"Product news"}.get(p["type"],p["type"]))}</b> · {int(p["date"][8:])} {MON_[int(p["date"][5:7])-1]} {p["date"][:4]}</span><h3>{E(p["title"])}</h3><p>{E(p["desc"])}</p><span class="lnk">Read more →</span></a>'
+BLOG_TEASER=(f'<section class="band paper"><div class="wrap"><div class="sh-row"><div><span class="eyebrow">Blog &amp; Updates</span><h2>Guides from our team</h2></div><a class="lnk" href="/blog/">All posts →</a></div><div class="post-grid">{"".join(_teaser(p) for p in POSTS[:3])}</div></div></section>') if POSTS else ''
+
 FIND=lambda i: next(f for f in F if f['id']==i)
 IDS={f['id'] for f in F}
 pop=[FIND(i) for i in SITE.get('home_popular',[]) if i in IDS] or [f for f in F if f['featured']][:10]
@@ -258,7 +301,7 @@ body=f'''<section class="hero2"><div class="wrap">
 <section class="band"><div class="wrap how"><div class="how-l"><span class="eyebrow">How ordering works</span><h2>From account to approved quotation in minutes</h2><p class="lead">Purchase teams need a formal quotation before raising a PO. MRO Mogul gives you one instantly, in your company's name, with GST worked out.</p><a class="btn btn-blue" href="/account/#register">Create your account</a></div>
 <ol class="steps2"><li><b>Create a free account</b><span>Your company, GSTIN and whether you are an end user or reseller. It takes a minute.</span></li><li><b>Add sizes to your cart</b><span>See your prices on every size and part number.</span></li><li><b>Download the official PDF quote</b><span>Generated by our accounting system in your company's name, with HSN and GST.</span></li><li><b>Confirm and receive</b><span>Place the order online or on WhatsApp. We send a proforma invoice and dispatch from Chennai.</span></li></ol></div></section>
 <section class="band dark on-dark inds"><div class="wrap"><div class="inds-l"><span class="eyebrow">Industries served</span><h2 style="color:#fff">Trusted by maintenance teams across South India</h2><p>From automotive plants in Sriperumbudur and Hosur to wind farms, pharma units and fabrication shops, our customers rely on us for the everyday items that keep production running.</p></div><ul>{''.join(f'<li>{E(x)}</li>' for x in INDS)}</ul></div></section>
-<section class="band" id="faq"><div class="wrap faq-wrap"><div><span class="eyebrow">Questions</span><h2>Frequently asked questions</h2><p class="lead" style="margin-top:10px">Can't find your answer? Call <a href="tel:+{CONFIG['phone_raw']}">{CONFIG['phone']}</a> or WhatsApp us.</p></div>{faq_html(HOME_FAQ)}</div></section>
+{BLOG_TEASER}<section class="band" id="faq"><div class="wrap faq-wrap"><div><span class="eyebrow">Questions</span><h2>Frequently asked questions</h2><p class="lead" style="margin-top:10px">Can't find your answer? Call <a href="tel:+{CONFIG['phone_raw']}">{CONFIG['phone']}</a> or WhatsApp us.</p></div>{faq_html(HOME_FAQ)}</div></section>
 <section class="cta2"><div class="wrap"><div><h2>Have an indent or a full BOQ?</h2><p>Send the list. We quote the best available price, pack size and delivery date, usually the same day.</p></div><div class="cta2-b"><a class="btn btn-amber" href="/contact/">Request bulk quote</a><a class="btn btn-ghost" href="https://wa.me/{CONFIG['phone_raw']}" target="_blank" rel="noopener">{ico("wa")}WhatsApp us</a></div></div></section>'''
 write('/',page("MRO Mogul | Industrial Tools, Pneumatics & MRO Supplies – Chennai, South India",
   "Buy genuine Stanley & Taparia hand tools, Techno solenoid valves, FRLs, cylinders, push-in fittings, air tools, Airic brass fittings and Totem taps. Trade pricing, GST invoice, official quotes. Chennai.",
@@ -500,6 +543,59 @@ cart=f'''{crumbs([("Home","/"),("Cart","/cart/")])}
 write('/cart/',page("Cart & Official Quotation | MRO Mogul","Review your cart, download an official GST quotation or place an order request.","/cart/",cart,noindex=True))
 write('/order-received/',page("Order Request Received | MRO Mogul","Thank you.","/order-received/",f'<section class="band"><div class="wrap empty-cart"><h1>Thank you. Your order request has been sent.</h1><p>We will confirm availability and share a proforma invoice. Call {CONFIG["phone"]} for urgent orders.</p><a class="btn btn-blue" href="/products/">Continue shopping</a></div></section>',noindex=True))
 
+# ---------- blog & updates ----------
+MON=['January','February','March','April','May','June','July','August','September','October','November','December']
+fdate=lambda d: f"{int(d[8:10])} {MON[int(d[5:7])-1]} {d[:4]}"
+os.makedirs(OUT+'/img/blog',exist_ok=True)
+def post_img(p):
+    if p['image']:
+        src=os.path.join(BLOGIMG,p['image'])
+        if os.path.isfile(src):
+            dst=f"/img/blog/{p['slug']}{os.path.splitext(p['image'])[1].lower()}"
+            if Image:
+                try:
+                    im=Image.open(src); im=ImageOps.exif_transpose(im).convert('RGB'); im.thumbnail((1600,1000)); dst=f"/img/blog/{p['slug']}.jpg"; im.save(OUT+dst,quality=85,optimize=True,progressive=True); return dst,False
+                except Exception as e: warn(f"blog image {src}: {e}")
+            shutil.copy(src,OUT+dst); return dst,False
+        warn(f"blog {p['slug']}: image {p['image']} not found in images/blog/")
+    if p['products']: return f"/img/p/{p['products'][0]}.jpg",True
+    return '/img/logo-512.png',True
+TYPELBL={'Guide':'Buying guide','Update':'Company update','News':'Product news'}
+def post_card(p):
+    img,prod=post_img(p)
+    return (f'<a class="post-card" href="{p["url"]}" data-type="{E(p["type"])}"><span class="pc-img{" prod" if prod else ""}"><img src="{img}" alt="" loading="lazy"></span>'
+            f'<span class="pc-meta"><b>{E(TYPELBL.get(p["type"],p["type"]))}</b> · {fdate(p["date"])}</span><h3>{E(p["title"])}</h3><p>{E(p["desc"])}</p><span class="lnk">Read more →</span></a>')
+types=[t for t in ['Guide','Update','News'] if any(p['type']==t for p in POSTS)]+sorted({p['type'] for p in POSTS}-{'Guide','Update','News'})
+chips=''.join(f'<button type="button" class="chip" data-bt="{E(t)}" aria-pressed="false">{E(TYPELBL.get(t,t))}s</button>' for t in types)
+blist=(f'<div class="blog-chips" role="group" aria-label="Filter posts"><button type="button" class="chip" data-bt="" aria-pressed="true">All posts</button>{chips}</div><div class="post-grid" id="postGrid">{"".join(post_card(p) for p in POSTS)}</div>'
+       if POSTS else '<div class="empty-cart"><h2>Posts are on their way</h2><p>Buying guides and company updates will appear here.</p></div>')
+write('/blog/',page("Blog & Updates – Buying Guides for Industrial Tools & Pneumatics | MRO Mogul",
+  "Practical buying guides for pneumatic valves, fittings, hand tools and cutting tools, plus news and updates from MRO Mogul, Chennai.",'/blog/',
+  crumbs([("Home","/"),("Blog & Updates","/blog/")])+page_head("Blog &amp; Updates","Guides and updates","Practical buying guides for maintenance and production teams, and news from MRO Mogul.")+f'<section class="band tight"><div class="wrap">{blist}</div></section>',
+  active='/blog/',ld=[crumb_ld([("Home","/"),("Blog & Updates","/blog/")]),{"@context":"https://schema.org","@type":"Blog","name":"MRO Mogul Blog & Updates","url":DOMAIN+"/blog/","publisher":{"@id":DOMAIN+"/#store"}}]))
+for i,p in enumerate(POSTS):
+    img,prod=post_img(p); more=[q for q in POSTS if q is not p][:3]
+    pfs=[f for f in F if f['id'] in p['products']]
+    body=f'''{crumbs([("Home","/"),("Blog & Updates","/blog/"),(p["title"],p["url"])])}
+<article class="band tight"><div class="wrap post">
+ <header class="post-head"><span class="eyebrow">{E(TYPELBL.get(p["type"],p["type"]))}</span><h1>{E(p["title"])}</h1>
+  <p class="post-meta"><time datetime="{p["date"]}">{fdate(p["date"])}</time> · {p["mins"]} min read · {E(p["author"])}</p></header>
+ {'' if prod else f'<figure class="post-cover"><img src="{img}" alt="{E(p["title"])}"></figure>'}
+ <div class="post-body prose">{p["html"]}</div>
+ {f'<section class="post-prods"><h2>Products in this article</h2><div class="pgrid pgrid-5">{"".join(card(f,k) for k,f in enumerate(pfs))}</div></section>' if pfs else ''}
+ <aside class="post-cta"><div><b>Need these for your plant?</b><p>Create a free trade account to see prices and download an official GST quotation in seconds.</p></div><div class="sb-b"><a class="btn btn-amber" href="/account/#register">Create account</a><a class="btn btn-ghost" href="/contact/">Ask our team</a></div></aside>
+</div></article>
+{f'<section class="band tight paper"><div class="wrap" style="display:grid;gap:16px"><h2>More from the blog</h2><div class="post-grid">{"".join(post_card(q) for q in more)}</div></div></section>' if more else ''}'''
+    ld={"@context":"https://schema.org","@type":"BlogPosting","headline":p['title'],"description":p['desc'],"datePublished":p['date'],"dateModified":p['date'],
+        "image":[DOMAIN+img],"author":{"@type":"Organization","name":p['author']},"publisher":{"@id":DOMAIN+"/#store"},"mainEntityOfPage":DOMAIN+p['url']}
+    write(p['url'],page(f"{p['title']} | MRO Mogul",p['desc'],p['url'],body,active='/blog/',ld=[ld,crumb_ld([("Home","/"),("Blog & Updates","/blog/"),(p['title'],p['url'])])],og=img))
+# RSS feed
+rss='<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>MRO Mogul Blog &amp; Updates</title><link>'+DOMAIN+'/blog/</link><description>Buying guides and updates from MRO Mogul</description>'
+for p in POSTS[:30]:
+    d=datetime.date.fromisoformat(p['date']).strftime('%a, %d %b %Y 09:00:00 +0530')
+    rss+=f'<item><title>{E(p["title"])}</title><link>{DOMAIN}{p["url"]}</link><guid>{DOMAIN}{p["url"]}</guid><pubDate>{d}</pubDate><description>{E(p["desc"])}</description></item>'
+open(OUT+'/blog/feed.xml','w').write(rss+'</channel></rss>\n')
+
 # ---------- about / contact / policies ----------
 about=f'''{crumbs([("Home","/"),("About us","/about/")])}{page_head("About us","An online MRO store with 15+ years of supply behind it","MRO Mogul is the online store of Accelfast Industrial Enterprises, the Chennai industrial supplier serving South Indian plants since 2009.")}
 <section class="band"><div class="wrap">{WHO}</div></section>
@@ -537,7 +633,7 @@ write('/policies/',page("Shipping, Returns, Payment & Privacy | MRO Mogul","Ship
 open(OUT+'/404.html','w').write(page("Page Not Found | MRO Mogul","Page not found.","/404.html",'<section class="band"><div class="wrap empty-cart"><h1>We couldn\'t find that page</h1><p>Search the catalogue or browse categories.</p><a class="btn btn-amber" href="/products/">Browse products</a></div></section>',noindex=True))
 
 # ---------- SEO files ----------
-urls=[('/','1.0',None),('/products/','0.9',None),('/brands/','0.8',None),('/categories/','0.8',None),('/about/','0.6',None),('/contact/','0.6',None),('/policies/','0.3',None)]+[(BR(b),'0.8',None) for b in BRANDS]+[(CAT(c[0]),'0.8',None) for c in CATS]+[(PROD(f['id']),'0.7',f) for f in F]
+urls=[('/','1.0',None),('/products/','0.9',None),('/brands/','0.8',None),('/categories/','0.8',None),('/about/','0.6',None),('/contact/','0.6',None),('/policies/','0.3',None)]+[(BR(b),'0.8',None) for b in BRANDS]+[(CAT(c[0]),'0.8',None) for c in CATS]+[(PROD(f['id']),'0.7',f) for f in F]+[('/blog/','0.6',None)]+[(p['url'],'0.6',None) for p in POSTS]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n'
 for u,p,f in urls:
     img=f'<image:image><image:loc>{DOMAIN}/img/p/{f["id"]}.jpg</image:loc></image:image>' if f else ''

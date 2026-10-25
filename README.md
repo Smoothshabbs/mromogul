@@ -10,6 +10,7 @@ Netlify **builds the website automatically** every time a file in this repositor
 | `data/products.csv` | Every size and part number with its **prices**, stock status, HSN and GST. Private: never published. | **Yes**, for prices and new sizes |
 | `data/product-info.csv` | One row per product: name, brand, category, descriptions and features. | **Yes**, when adding products |
 | `images/products/` | Product photos, one per product. | **Yes**, to add or replace photos |
+| `content/blog/` | Blog posts and updates, one file per post. | **Yes**, to publish posts |
 | `data/site.json` | Categories (buying guides, FAQs), brand introductions, home-page picks and company details such as the GSTIN. | Occasionally |
 | `site/` | The page generator, styles and scripts. | No |
 | `netlify/` | Sign-in, prices, quotations, orders, account pages, reminder emails and the Zoho connection. | No |
@@ -52,6 +53,29 @@ Commit the changes. Netlify then builds the full product page with specs, FAQs a
 - A **new brand** gets its own brand page automatically. To give it a proper introduction, add it to the `brands` list in `data/site.json`.
 - A **new category** works straight away. Add it to `categories` in `data/site.json` to give it a description, buying guide and FAQs.
 - If something is missing, Netlify's **deploy log** shows a `WARNING` line saying what to fix.
+
+## Blog & Updates: writing a post
+Posts live in `content/blog/`. Each post is one text file ending in `.md`.
+
+**To add a post on GitHub:**
+1. Open `content/blog/`, then open `_template.md` and copy all its text.
+2. Go back to `content/blog/` and click **Add file → Create new file**.
+3. Name the file with the date and a few words, for example `2026-11-01-frl-maintenance-tips.md`. The words after the date become the web address: `mromogul.com/blog/frl-maintenance-tips/`.
+4. Paste the template, fill in the top section, and write the post below it.
+   - `type`: `Guide` (how-to and buying advice), `Update` (company news) or `News` (new products and brands).
+   - `products`: optional. List `product_id`s from `product-info.csv`, separated by commas. They appear as product cards under the post.
+   - `image`: optional. Upload a photo to `images/blog/` and put its file name here. Without one, the first product's photo is used.
+   - Delete the line `draft: yes`, or the post stays hidden.
+5. Click **Commit changes**. The post appears on the Blog page, on the home page ("Guides from our team") and in the sitemap within about 2 minutes.
+
+**Formatting:**
+- `## Heading` for a heading
+- `- item` for a bullet list
+- `**bold**` for bold text
+- `[text](/products/)` for a link
+- Leave a blank line between paragraphs. Tables work too (see the template).
+
+**Scheduling:** a post with a future date stays hidden until that date. It appears on the first deploy on or after that day, and any later edit to the site triggers a deploy.
 
 ## 3. Customer accounts: what customers get
 | Feature | Where the data comes from |

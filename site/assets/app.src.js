@@ -267,6 +267,9 @@ function renderReorder(){
      .catch(function(){m.className="fmsg quote-msg err";m.textContent="Network error. Please try again.";m.hidden=false;b.disabled=false;b.textContent="Place this order"})});
 }
 
+
+/* ---------- blog filter ---------- */
+$$(".blog-chips .chip").forEach(function(c){c.addEventListener("click",function(){var t=c.dataset.bt;$$(".blog-chips .chip").forEach(function(x){x.setAttribute("aria-pressed",x===c)});$$("#postGrid .post-card").forEach(function(p){p.hidden=!!t&&p.dataset.type!==t})})});
 /* ---------- menu ---------- */
 var nav=$("#nav"),mb=$("#menuBtn"); if(mb) mb.addEventListener("click",function(){var o=nav.dataset.open!=="true";nav.dataset.open=o;mb.setAttribute("aria-expanded",o)});
 $$("form[role=search]").forEach(function(f){f.addEventListener("submit",function(e){if(!LOCAL)return;e.preventDefault();location.href=U(f.getAttribute("data-to")||"/products/")+"?q="+encodeURIComponent(f.querySelector("input").value)})});
